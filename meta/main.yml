@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: wireguard
   author: Sanan Guliyev
   description: An Ansible Role that manages setup and configuration of WireGuard
 

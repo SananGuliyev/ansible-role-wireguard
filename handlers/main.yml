@@ -6,4 +6,5 @@
   loop:
     - stopped
     - started
+  changed_when: false
   listen: restart wireguard

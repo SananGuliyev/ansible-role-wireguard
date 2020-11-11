@@ -54,7 +54,7 @@ provisioner:
       client:
         group_destinations:
           global_gw:
-            - 10.9.0.3/32nano
+            - 10.9.0.3/32
     host_vars:
       "${MOLECULE_TEST_SCOPE:-default}-instance1":
         wireguard_address: 10.9.0.1

@@ -2,14 +2,14 @@
 - include_tasks: install.yml
   tags: [wg, wg-install]
 
-- include_tasks: keys.yml
+- include_tasks: generate_keys.yml
   tags: [wg, wg-keys]
 
 - include_tasks: configure.yml
   tags: [wg, wg-config]
 
-#- name: Start and enable WireGuard service
-#  service:
-#    name: "wg-quick@{{ wireguard_interface }}"
-#    state: started
-#    enabled: yes
+- name: Start and enable WireGuard service
+  service:
+    name: "wg-quick@{{ wireguard_interface }}"
+    state: started
+    enabled: yes

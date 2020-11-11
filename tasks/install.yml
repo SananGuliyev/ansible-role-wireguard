@@ -2,12 +2,6 @@
 - name: Update APT package cache
   apt:
     update_cache: true
-  tags:
-    - wg-install
-
-- name: Install WireGuard package
-  apt:
+    cache_valid_time: 86400
     name: wireguard
     state: present
-  tags:
-    - wg-install

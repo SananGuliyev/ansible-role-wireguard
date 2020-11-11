@@ -18,7 +18,7 @@ PostDown = {{ wg_postdown }}
 {%   for destination in group_destinations[destination_group] %}
 {%     for host in groups[destination_group] %}
 [Peer]
-PublicKey = {{ hostvars[host].wireguard__fact_public_key }}
+PublicKey = {{ hostvars[host].wireguard_fact_public_key }}
 AllowedIps = {{ destination }}
 Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
 
@@ -26,7 +26,7 @@ Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
 {%   for allowed_group in allowed_groups %}
 {%     for allowed_host in groups[allowed_group] %}
 [Peer]
-PublicKey = {{ hostvars[allowed_host].wireguard__fact_public_key }}
+PublicKey = {{ hostvars[allowed_host].wireguard_fact_public_key }}
 AllowedIps = {{ hostvars[allowed_host].wireguard_address }}/{{ hostvars[allowed_host].wireguard_subnet }}
 Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
 {%     endfor %}
@@ -43,7 +43,7 @@ Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
 {%   for allowed_group in allowed_groups %}
 {%     for allowed_host in groups[allowed_group] %}
 [Peer]
-PublicKey = {{ hostvars[allowed_host].wireguard__fact_public_key }}
+PublicKey = {{ hostvars[allowed_host].wireguard_fact_public_key }}
 AllowedIps = {{ hostvars[allowed_host].wireguard_address }}/{{ hostvars[allowed_host].wireguard_subnet }}
 {%     endfor %}
 {%   endfor %}

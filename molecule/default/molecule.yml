@@ -15,14 +15,14 @@ platforms:
     server_type: cx11
     image: ubuntu-20.04
     groups:
-      - global-gw
+      - global_gw
       - wireguard
   - name: ${MOLECULE_TEST_SCOPE:-default}-instance3
     server_type: cx11
     image: ubuntu-20.04
     groups:
-      - site-gw-10
-      - site-gw
+      - site_gw-10
+      - site_gw
       - wireguard
 provisioner:
   name: ansible
@@ -34,27 +34,27 @@ provisioner:
       all:
         wireguard_port: 51820
         wireguard_interface: wg0
-      site-gw:
+      site_gw:
         wireguard_postup:
           - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE;
         wireguard_postdown:
           - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
         allowed_groups:
-          - global-gw
-      global-gw:
+          - global_gw
+      global_gw:
         wireguard_postup:
           - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
         wireguard_postdown:
           - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE;
         group_destinations:
-          site-gw-10:
-            - 8.8.8.8/32
+          site_gw-10:
+            - 10.9.0.3/32
         allowed_groups:
           - client
       client:
         group_destinations:
-          global-gw:
-            - 8.8.8.8/32
+          global_gw:
+            - 10.9.0.3/32nano
     host_vars:
       "${MOLECULE_TEST_SCOPE:-default}-instance1":
         wireguard_address: 10.9.0.1

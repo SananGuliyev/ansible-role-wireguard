@@ -15,11 +15,10 @@ PostDown = {{ wg_postdown }}
 
 {% if group_destinations is defined %}
 {% for destination_group in group_destinations.keys() %}
-{%   for destination in group_destinations[destination_group] %}
-{%     for host in groups[destination_group] %}
+{%   for host in groups[destination_group] %}
 [Peer]
 PublicKey = {{ hostvars[host].wireguard_fact_public_key }}
-AllowedIps = {{ destination }}
+AllowedIps = {{ group_destinations[destination_group] | join(', ') }}
 Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
 
 {% if allowed_groups is defined %}
@@ -32,8 +31,6 @@ Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
 {%     endfor %}
 {%   endfor %}
 {% endif %}
-
-{%     endfor %}
 
 {%   endfor %}
 {% endfor %}

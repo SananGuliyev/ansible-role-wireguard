@@ -39,20 +39,20 @@ provisioner:
           - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE;
         wireguard_postdown:
           - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
-        allowed_groups:
+        wireguard_allowed_groups:
           - global_gw
       global_gw:
         wireguard_postup:
           - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
         wireguard_postdown:
           - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE;
-        group_destinations:
+        wireguard_group_destinations:
           site_gw-10:
             - 10.9.0.3/32
-        allowed_groups:
+        wireguard_allowed_groups:
           - client
       client:
-        group_destinations:
+        wireguard_group_destinations:
           global_gw:
             - 10.9.0.3/32
     host_vars:

@@ -20,10 +20,6 @@ The port WireGuard will listen.
 
 The interface name that WireGuard should use.
 
-#### Group Variables
-
-Available group variables listed below:
-
     wireguard_postup: 
       - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE;
 
@@ -34,13 +30,13 @@ The hooks for to do some network related stuff after a WireGuard interface comes
 
 The hooks for to do some network related stuff after a WireGuard interface goes down.
 
-    group_destinations:
+    wireguard_group_destinations:
       some-group:
         - 8.8.8.8 # or 8.8.8.8/32
 
 Destination groups are for routing traffic to specific group hosts (WireGuard `AllowedIPs`) 
 
-    allowed_groups:
+    wireguard_allowed_groups:
       - some-client-groups
 
 Allowed groups is for granting access to the server hosts for client hosts.

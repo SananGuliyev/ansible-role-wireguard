@@ -1,3 +1,9 @@
 ---
 wireguard_port: 51820
 wireguard_interface: wg0
+
+wireguard_postup: []
+wireguard_postdown: []
+
+wireguard_group_destinations: {}
+wireguard_allowed_groups: []

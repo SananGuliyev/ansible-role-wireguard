@@ -1,3 +1,9 @@
+[![Build Status](https://travis-ci.com/SananGuliyev/ansible-role-wireguard.svg?branch=master)](https://travis-ci.com/SananGuliyev/ansible-role-wireguard)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/SananGuliyev/ansible-role-wireguard)](https://galaxy.ansible.com/sananguliyev/wireguard)
+[![Ansible Galaxy](https://img.shields.io/badge/role-sananguliyev.wireguard-blue.svg)](https://galaxy.ansible.com/sananguliyev/wireguard/)
+[![Ansible Galaxy Quality Score](https://img.shields.io/ansible/quality/51749)](https://galaxy.ansible.com/sananguliyev/wireguard/)
+[![Ansible Galaxy Downloads](https://img.shields.io/ansible/role/d/51749.svg?color=blue)](https://galaxy.ansible.com/sananguliyev/wireguard/)
+
 # Ansible Role: WireGuard
 
 An Ansible Role that manages setup and configuration of [WireGuard](https://www.wireguard.com/)
@@ -14,18 +20,61 @@ The port WireGuard will listen.
 
 The interface name that WireGuard should use.
 
+#### Group Variables
+
+Available group variables listed below:
+
+    wireguard_postup: 
+      - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE;
+
+The hooks for to do some network related stuff after a WireGuard interface comes up.
+
+    wireguard_postdown: 
+      - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
+
+The hooks for to do some network related stuff after a WireGuard interface goes down.
+
+    destination_groups:
+      8.8.8.8: some-group
+
+Destination groups are for routing traffic to specific group hosts (WireGuard `AllowedIPs`) 
+
+    allowed_groups:
+      - some-client-groups
+
+Allowed groups is for granting access to the server hosts for client hosts.
+
 ## Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
     - hosts: servers
       roles:
-         - { role: SananGuliyev.rolename, x: 42 }
+         - sananguliyev.wireguard
+      vars:
+         - x: 1918
+
+## Development
+
+Use [docker-molecule](https://github.com/infrastructr/docker-molecule) following the instructions to run [Molecule](https://molecule.readthedocs.io/en/stable/)
+or install [Molecule](https://molecule.readthedocs.io/en/stable/) locally (not recommended, version conflicts might appear).
+
+Provide Hetzner Cloud token:
+
+    export HCLOUD_TOKEN=123abc456efg
+
+Use following to run tests:
+
+    molecule test --all
+
+## Maintainers
+
+- [SananGuliyev](https://github.com/SananGuliyev)
 
 ## License
 
-MIT
+See the [LICENSE.md](LICENSE.md) file for details.
 
 ## Author Information
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role was created in 2020 by [Sanan Guliyev](https://sanan.guliev.info/).

@@ -34,8 +34,9 @@ The hooks for to do some network related stuff after a WireGuard interface comes
 
 The hooks for to do some network related stuff after a WireGuard interface goes down.
 
-    destination_groups:
-      8.8.8.8: some-group
+    group_destinations:
+      some-group:
+        - 8.8.8.8 # or 8.8.8.8/32
 
 Destination groups are for routing traffic to specific group hosts (WireGuard `AllowedIPs`) 
 

@@ -46,13 +46,15 @@ provisioner:
           - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
         wireguard_postdown:
           - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE;
-        destination_groups:
-          8.8.8.8: site-gw-10
+        group_destinations:
+          site-gw-10:
+            - 8.8.8.8/32
         allowed_groups:
           - client
       client:
-        destination_groups:
-          8.8.8.8: global-gw
+        group_destinations:
+          global-gw:
+            - 8.8.8.8/32
     host_vars:
       "${MOLECULE_TEST_SCOPE:-default}-instance1":
         wireguard_address: 10.9.0.1

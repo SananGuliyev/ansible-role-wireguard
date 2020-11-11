@@ -1,9 +1,13 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
-- name: Verify
+- name: Verify WireGuard state
   hosts: all
   tasks:
-  - name: Example assertion
-    assert:
-      that: true
+    - name: Get WireGuard service status
+      command: wg
+      register: service_status
+      changed_when: no
+    - name: Verify WireGuard is running and listening to the port
+      assert:
+        that:
+          - "'listening' in service_status.stdout"
+          - "'{{ wireguard_port }}' in service_status.stdout"

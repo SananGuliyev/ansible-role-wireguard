@@ -1,0 +1,29 @@
+---
+- name: Generate WireGuard private key
+  command: "wg genkey"
+  register: wireguard__register_private_key
+  changed_when: false
+  tags:
+    - wg-keys
+
+- name: Set private key fact
+  set_fact:
+    wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
+  tags:
+    - wg-keys
+
+- name: Derive WireGuard public key
+  command: "wg pubkey"
+  args:
+    stdin: "{{ wireguard_private_key }}"
+  register: wireguard__register_public_key
+  changed_when: false
+  check_mode: no
+  tags:
+    - wg-keys
+
+- name: Set public key fact
+  set_fact:
+    wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
+  tags:
+    - wg-keys

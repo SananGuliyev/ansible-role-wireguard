@@ -1,0 +1,81 @@
+---
+driver:
+  name: hetznercloud
+lint: |
+  set -e
+  yamllint .
+platforms:
+  - name: ${MOLECULE_TEST_SCOPE:-default}-instance1
+    server_type: cx11
+    image: ubuntu-20.04
+    groups:
+      - client
+      - wireguard
+  - name: ${MOLECULE_TEST_SCOPE:-default}-instance2
+    server_type: cx11
+    image: ubuntu-20.04
+    groups:
+      - global-gw
+      - wireguard
+  - name: ${MOLECULE_TEST_SCOPE:-default}-instance3
+    server_type: cx11
+    image: ubuntu-20.04
+    groups:
+      - site-gw-10
+      - site-gw
+      - wireguard
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+  inventory:
+    group_vars:
+      all:
+        wireguard_port: 51820
+        wireguard_interface: wg0
+      site-gw:
+        wireguard_postup:
+          - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE;
+        wireguard_postdown:
+          - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
+        allowed_groups:
+          - global-gw
+      global-gw:
+        wireguard_postup:
+          - iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
+        wireguard_postdown:
+          - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o wg0 -j MASQUERADE;
+        destination_groups:
+          8.8.8.8: site-gw-10
+        allowed_groups:
+          - client
+      client:
+        destination_groups:
+          8.8.8.8: global-gw
+    host_vars:
+      "${MOLECULE_TEST_SCOPE:-default}-instance1":
+        wireguard_address: 10.9.0.1
+        wireguard_subnet: 24
+      "${MOLECULE_TEST_SCOPE:-default}-instance2":
+        wireguard_address: 10.9.0.2
+        wireguard_subnet: 24
+      "${MOLECULE_TEST_SCOPE:-default}-instance3":
+        wireguard_address: 10.9.0.3
+        wireguard_subnet: 24
+
+  lint: |
+    set -e
+    ansible-lint
+  playbooks:
+    create: ../resources/playbooks/create.yml
+    destroy: ../resources/playbooks/destroy.yml
+verifier:
+  name: ansible
+  lint: |
+    set -e
+    ansible-lint
+dependency:
+  name: galaxy
+  options:
+    role-file: molecule/resources/requirements.yml

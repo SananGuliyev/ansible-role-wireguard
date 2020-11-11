@@ -1,0 +1,13 @@
+---
+- name: Update APT package cache
+  apt:
+    update_cache: true
+  tags:
+    - wg-install
+
+- name: Install WireGuard package
+  apt:
+    name: wireguard
+    state: present
+  tags:
+    - wg-install

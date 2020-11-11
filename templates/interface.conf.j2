@@ -1,0 +1,47 @@
+[Interface]
+PrivateKey = {{ wireguard_private_key }}
+Address = {{ wireguard_address }}/{{ wireguard_subnet }}
+ListenPort = {{ wireguard_port }}
+{% if wireguard_postup is defined %}
+{% for wg_postup in wireguard_postup %}
+PostUp = {{ wg_postup }}
+{% endfor %}
+{% endif %}
+{% if wireguard_postdown is defined %}
+{% for wg_postdown in wireguard_postdown %}
+PostDown = {{ wg_postdown }}
+{% endfor %}
+{% endif %}
+
+{% if destination_groups is defined %}
+{% for allowed_ip in destination_groups.keys() %}
+{%   for host in groups[destination_groups[allowed_ip]] %}
+[Peer]
+PublicKey = {{ hostvars[host].wireguard__fact_public_key }}
+AllowedIps = {{ allowed_ip }}/32
+Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
+
+{% if allowed_groups is defined %}
+{%   for allowed_group in allowed_groups %}
+{%     for allowed_host in groups[allowed_group] %}
+[Peer]
+PublicKey = {{ hostvars[allowed_host].wireguard__fact_public_key }}
+AllowedIps = {{ hostvars[allowed_host].wireguard_address }}/32
+Endpoint = {{ hostvars[host].ansible_host }}:{{ wireguard_port }}
+{%     endfor %}
+{%   endfor %}
+{% endif %}
+
+{%   endfor %}
+{% endfor %}
+{% endif %}
+
+{% if allowed_groups is defined and destination_groups is not defined %}
+{%   for allowed_group in allowed_groups %}
+{%     for allowed_host in groups[allowed_group] %}
+[Peer]
+PublicKey = {{ hostvars[allowed_host].wireguard__fact_public_key }}
+AllowedIps = {{ hostvars[allowed_host].wireguard_address }}/32
+{%     endfor %}
+{%   endfor %}
+{% endif %}

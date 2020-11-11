@@ -11,3 +11,16 @@
         that:
           - "'listening' in service_status.stdout"
           - "'{{ wireguard_port }}' in service_status.stdout"
+
+- name: Verify reachability
+  hosts: client
+  tasks:
+    - name: Ping destination
+      command: ping -c 1 10.9.0.3
+      register: ping_status
+      changed_when: no
+    - name: Verify packet received
+      assert:
+        that:
+          - "'1 received' in ping_status.stdout"
+          - "'0% packet loss' in ping_status.stdout"

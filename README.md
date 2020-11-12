@@ -43,13 +43,12 @@ Allowed groups is for granting access to the server hosts for client hosts.
 
 ## Example Playbook
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
     - hosts: servers
       roles:
          - sananguliyev.wireguard
       vars:
-         - x: 1918
+         wireguard_port: 51820
+         wireguard_interface: wg0
 
 ## Development
 
